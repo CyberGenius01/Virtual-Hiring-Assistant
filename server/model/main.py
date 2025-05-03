@@ -18,7 +18,7 @@ def encode(text):
 def fetch_question(answer: str):
     emb = encode(answer)
 
-    with open(os.path.join(os.curdir, 'server\\resources\\emb.npy'), 'rb') as f:
+    with open(os.path.join(os.curdir, 'resources\\emb.npy'), 'rb') as f:
         q_embs = np.load(f)
 
     cosine_scores = util.cos_sim(q_embs, emb).squeeze().numpy()
@@ -31,7 +31,7 @@ def fetch_question(answer: str):
     probabilities /= probabilities.sum()
 
 
-    with open(os.path.join(os.curdir, 'server\\resources\\ques_list.json'), 'r') as f:
+    with open(os.path.join(os.curdir, 'resources\\ques_list.json'), 'r') as f:
         questions = json.load(f)
 
     selected_question = np.random.choice(questions, p=probabilities)
@@ -39,12 +39,12 @@ def fetch_question(answer: str):
 
 
 def encode_questions():
-    with open(os.path.join(os.curdir, 'server\\resources\\ques_list.json'), 'r') as f:
+    with open(os.path.join(os.curdir, 'resources\\ques_list.json'), 'r') as f:
         data = json.load(f)
 
     result = []
     for q in data:
         result.append(encode(q))
 
-    with open(os.path.join(os.curdir, 'server\\resources\\emb.npy'), 'wb') as f:
+    with open(os.path.join(os.curdir, 'resources\\emb.npy'), 'wb') as f:
         np.save(f, np.array(result))
